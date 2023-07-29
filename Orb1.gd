@@ -4,6 +4,9 @@ var speed = 400
 var direction = Vector2()
 var monsters = []
 
+# Declare a new signal
+signal hit
+
 func shoot(dir):
 	direction = dir
 
@@ -30,4 +33,5 @@ func _physics_process(delta):
 
 func _on_Orb_area_entered(area):
 	if area.is_in_group("monsters"):
+		emit_signal("hit", area)  # Emit the hit signal
 		queue_free()
