@@ -1,3 +1,4 @@
+#monster1
 extends Area2D
 
 var health = 100  # The monster's health
@@ -18,8 +19,8 @@ func _physics_process(delta):
 		var direction = (player.position - position).normalized()  # Get the direction to the player
 		position += direction * speed * delta  # Move towards the player
 
-func _on_Monster_hit(orb):
-	health -= 50  # Reduce the monster's health by 50
+func _on_Monster_hit(orb, damage, base_damage, damage_multiplier):
+	health -= damage  # Reduce the monster's health by the damage
+	health -= base_damage * damage_multiplier  # Calculate the damage
 	if health <= 0:
-		player.gain_experience(5)  # Give the player 5 experience points
 		queue_free()  # If the monster's health is 0 or less, remove it from the scene

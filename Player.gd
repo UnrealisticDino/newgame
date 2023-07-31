@@ -1,3 +1,4 @@
+#Player
 extends Area2D
 
 var experience = 0  # The player's experience points
@@ -5,6 +6,7 @@ var speed = 200  # Speed of the player
 var Orb = preload("res://orb1.tscn")  # Load the orb scene
 var level = 1  # The player's level
 var health = 100  # The player's health
+var damage_multiplier = 1 + level * 0.1  # The damage multiplier increases with the player's level
 
 func _ready():
 	position = get_viewport_rect().size / 2
@@ -37,7 +39,7 @@ func _input(event):
 
 		# Connect the hit signal from the orb to all monsters
 		for monster in get_tree().get_nodes_in_group("monsters"):
-			orb.connect("hit", monster, "_on_Monster_hit")
+			orb.connect("hit", monster, "_on_Monster_hit", [damage_multiplier])
 
 func gain_experience(amount):
 	experience += amount
@@ -48,6 +50,7 @@ func gain_experience(amount):
 func level_up():
 	level += 1
 	experience = 0  # Reset the experience points
+	damage_multiplier = 1 + level * 0.1  # Update the damage multiplier
 	print("Leveled up! Current level: " + str(level))
 
 func _on_Player_area_entered(area):

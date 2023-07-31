@@ -1,8 +1,12 @@
+#Orb1
 extends Area2D
 
 var speed = 400
 var direction = Vector2()
 var monsters = []
+var base_damage = 10  # The orb's base damage
+var player = null  # The player
+var health = 50
 
 # Declare a new signal
 signal hit
@@ -11,6 +15,7 @@ func shoot(dir):
 	direction = dir
 
 func _ready():
+	player = get_node("/root/MainScene/Player")  # Get the player node
 	connect("area_entered", self, "_on_Orb_area_entered")
 
 func _physics_process(delta):
@@ -33,5 +38,8 @@ func _physics_process(delta):
 
 func _on_Orb_area_entered(area):
 	if area.is_in_group("monsters"):
-		emit_signal("hit", area)  # Emit the hit signal
-		queue_free()
+		var damage = min(health, 10)  # Calculate the damage, it should not exceed the orb's health
+		health -= damage  # Decrease the orb's health
+		emit_signal("hit", area, damage, base_damage, player.damage_multiplier)
+		if health <= 0:
+			queue_free()  # If the orb's health is 0 or less, remove it from the scene

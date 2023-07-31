@@ -1,3 +1,4 @@
+#MainScene
 extends Node2D
 
 var Player = preload("res://Player.tscn")  # Load the player scene
