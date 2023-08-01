@@ -7,9 +7,10 @@ flags = 4
 load_path = "res://.import/orb.png-179da454b8369cd015dd3fc8f8d0c442.stex"
 
 [sub_resource type="CircleShape2D" id=1]
+radius = 20.0
 
 [node name="Area2D" type="Area2D" groups=["orbs"]]
-collision_layer = 2
+collision_layer = 4
 collision_mask = 4
 script = ExtResource( 1 )
 

@@ -1,22 +1,23 @@
-#Orb1
+# Orb1.gd
 extends Area2D
 
-var speed = 400
+var speed = 400  # The orb's initial speed
+var deceleration = 200  # The rate at which the orb slows down
 var direction = Vector2()
 var monsters = []
-var base_damage = 10  # The orb's base damage
+var base_damage = 100  # The orb's base damage
 var player = null  # The player
-var health = 50
 
 # Declare a new signal
 signal hit
 
 func shoot(dir):
-	direction = dir
+	direction = dir.normalized()  # Normalize the direction to ensure consistent speed
 
 func _ready():
 	player = get_node("/root/MainScene/Player")  # Get the player node
-	connect("area_entered", self, "_on_Orb_area_entered")
+	connect("body_entered", self, "_on_Orb_body_entered")  # Connect to the body_entered signal
+	add_to_group("orbs")  # Add the orb to the "orbs" group
 
 func _physics_process(delta):
 	monsters = get_tree().get_nodes_in_group("monsters")  # Update the monsters array
@@ -33,13 +34,21 @@ func _physics_process(delta):
 	if closest_monster:
 		var target_direction = (closest_monster.position - position).normalized()
 		direction = direction.linear_interpolate(target_direction, 0.05)
-		
+
+	# Reduce the speed by the deceleration rate
+	speed -= deceleration * delta
+	speed = max(speed, 0)  # Ensure the speed doesn't go negative
 	position += direction * speed * delta
 
-func _on_Orb_area_entered(area):
-	if area.is_in_group("monsters"):
-		var damage = min(health, 10)  # Calculate the damage, it should not exceed the orb's health
-		health -= damage  # Decrease the orb's health
-		emit_signal("hit", area, damage, base_damage, player.damage_multiplier)
-		if health <= 0:
-			queue_free()  # If the orb's health is 0 or less, remove it from the scene
+	# If the speed is 0, remove the orb from the scene
+	if speed <= 0:
+		queue_free()
+		
+func _on_Orb_body_entered(body):
+	if body.is_in_group("monsters"):
+		print("Collided with monster at position: ", body.position)
+		if body.has_method("get_name"):
+			print("Monster name: ", body.get_name())
+		print("Calculated damage: ", base_damage)
+		emit_signal("hit", body, base_damage)  # Emit the signal with base damage
+		queue_free()  # Remove the orb from the scene after hitting a monster
