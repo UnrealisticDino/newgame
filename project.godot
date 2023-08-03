@@ -8,6 +8,16 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Reference",
+"class": "TrackingPowerUp",
+"language": "GDScript",
+"path": "res://Tracking Power-Up.gd"
+} ]
+_global_script_class_icons={
+"TrackingPowerUp": ""
+}
+
 [application]
 
 config/name="testgame"

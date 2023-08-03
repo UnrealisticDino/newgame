@@ -1,6 +1,0 @@
-Godot Engine v3.5.1.stable.custom_build.6fed1ffa3 - https://godotengine.org
-OpenGL ES 3.0 Renderer: NVIDIA GeForce GTX 1070/PCIe/SSE2
-Async. shader compilation: OFF
- 
-ERROR: (Node not found: "Player" (relative to "/root/MainGame/Monster").)
-   at: get_node (scene/main/node.cpp:1465) - Method failed. Returning: nullptr

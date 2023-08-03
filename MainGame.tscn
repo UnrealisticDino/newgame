@@ -6,7 +6,13 @@
 [node name="MainGame" type="Node2D"]
 
 [node name="Monster" parent="." instance=ExtResource( 1 )]
-position = Vector2( 877, 460 )
+position = Vector2( 893, 424 )
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 486, 259 )
+
+[node name="Monster2" parent="." instance=ExtResource( 1 )]
+position = Vector2( 932, 260 )
+
+[node name="Monster3" parent="." instance=ExtResource( 1 )]
+position = Vector2( 644, 495 )
