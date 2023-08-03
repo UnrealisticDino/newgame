@@ -1,61 +1,42 @@
-#Player
-extends Area2D
+extends KinematicBody2D
 
-var experience = 0  # The player's experience points
-var speed = 200  # Speed of the player
-var Orb = preload("res://orb1.tscn")  # Load the orb scene
-var level = 1  # The player's level
-var health = 100  # The player's health
-var damage_multiplier = 1 + level * 0.1  # The damage multiplier increases with the player's level
+export var shuriken_scene = preload("res://Shuriken.tscn")
+export var speed = 200
+export var max_health = 100
+var health = max_health
 
-func _ready():
-	position = get_viewport_rect().size / 2
-	connect("area_entered", self, "_on_Player_area_entered")  # Connect the area_entered signal
+var velocity = Vector2()
 
-func _physics_process(delta):
-	var velocity = Vector2()  # The player's movement vector
-
-	# Input mapping
-	if Input.is_action_pressed('ui_right'):
+func _process(delta):
+	velocity = Vector2()
+	if Input.is_action_pressed("ui_right"):
 		velocity.x += 1
-	if Input.is_action_pressed('ui_left'):
+	if Input.is_action_pressed("ui_left"):
 		velocity.x -= 1
-	if Input.is_action_pressed('ui_down'):
+	if Input.is_action_pressed("ui_down"):
 		velocity.y += 1
-	if Input.is_action_pressed('ui_up'):
+	if Input.is_action_pressed("ui_up"):
 		velocity.y -= 1
+	velocity = velocity.normalized() * speed
+	move_and_slide(velocity)
+	if Input.is_action_just_pressed("ui_accept"):
+		var mouse_position = get_global_mouse_position()
+		shoot_shuriken(mouse_position)
 
-	velocity = velocity.normalized() * speed  # Normalize the vector for consistent speed
+func shoot_shuriken(target_position):
+	var direction = target_position - global_position
+	var shuriken = shuriken_scene.instance()
+	shuriken.global_position = global_position
+	shuriken.velocity = direction.normalized() * shuriken.speed
+	get_parent().add_child(shuriken)
 
-	position += velocity * delta  # Move the player
-
-func _input(event):
-	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.is_pressed():
-		var orb = Orb.instance()  # Create a new orb
-		get_parent().add_child(orb)  # Add the orb to the scene
-		orb.position = position  # Set the orb's position to the player's position
-		var direction = get_global_mouse_position() - position  # Get the direction to the mouse
-		orb.shoot(direction.normalized())  # Shoot the orb in the direction of the mouse
-
-		# Connect the hit signal from the orb to all monsters
-		for monster in get_tree().get_nodes_in_group("monsters"):
-			orb.connect("hit", monster, "_on_Monster_hit", [damage_multiplier])
-
-func gain_experience(amount):
-	experience += amount
-	if experience >= 20:
-		level_up()  # Level up the player
-
-# This function is called when the player levels up
-func level_up():
-	level += 1
-	experience = 0  # Reset the experience points
-	damage_multiplier = 1 + level * 0.1  # Update the damage multiplier
-	print("Leveled up! Current level: " + str(level))
-
-func _on_Player_area_entered(area):
-	if area.is_in_group("monsters"):
-		health -= 10  # Reduce the player's health by 10
-		if health <= 0:
-			print("Game over!")  # If the player's health is 0 or less, end the game
-			get_tree().quit()  # Stop the game
+func take_damage(damage):
+	health -= damage
+	health = clamp(health, 0, max_health)
+	print("Player health: ", health) # Print the current health
+	if health <= 0:
+		die()
+		
+func die():
+	print("Player has died!") # Print a message when the player dies
+	get_tree().quit()

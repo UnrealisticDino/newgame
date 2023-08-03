@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/orb.png-179da454b8369cd015dd3fc8f8d0c442.stex"
+path="res://.import/Shuriken.png-fb5455c668fa0b76ae0700608c28d7f4.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://orb.png"
-dest_files=[ "res://.import/orb.png-179da454b8369cd015dd3fc8f8d0c442.stex" ]
+source_file="res://Shuriken.png"
+dest_files=[ "res://.import/Shuriken.png-fb5455c668fa0b76ae0700608c28d7f4.stex" ]
 
 [params]
 

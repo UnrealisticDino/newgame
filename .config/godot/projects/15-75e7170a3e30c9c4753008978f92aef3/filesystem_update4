@@ -1,0 +1,8 @@
+res://MainGame.tscn
+res://Monster.gd
+res://Monster.tscn
+res://Player.gd
+res://Player.tscn
+res://Shuriken.gd
+res://Shuriken.tscn
+res://default_env.tres

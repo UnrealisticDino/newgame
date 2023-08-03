@@ -1,0 +1,21 @@
+679959e7917290c4d1380dafd36febcc
+::res://::1690993542
+backtomainmenu.gd::GDScript::1690698886::0::1::::<>Button<>::
+Button.gd::GDScript::1690698886::0::1::::<>Button<>::
+default_env.tres::Environment::1690698886::0::1::::<><>::
+game.tscn::PackedScene::1690698886::0::1::::<><>::res://Button.gd<>res://GridContainer.gd
+GameScene.gd::GDScript::1690698886::0::1::::<>Node2D<>::
+GameScene.tscn::PackedScene::1690698886::0::1::::<><>::res://Sudoku.gd<>res://PuzzleCreator.gd<>res://GameScene.gd
+icon.png::StreamTexture::1690698886::1690698886::1::::<><>::
+Magic Sudoku.gd::GDScript::1690698886::0::1::::<>CheckBox<>::
+Main.gd::GDScript::1690698886::0::1::::<>Control<>::
+Main.tscn::PackedScene::1690698886::0::1::::<><>::res://Options.gd<>res://Play.gd<>res://PuzzleGenerator.gd<>res://Main.gd
+Options.gd::GDScript::1690698886::0::1::::<>Button<>::
+Play.gd::GDScript::1690698886::0::1::::<>Button<>::
+PuzzleCreator.gd::GDScript::1690698886::0::1::::<>Node<>::
+PuzzleGenerator.gd::GDScript::1690698886::0::1::::<>Node<>::
+PuzzleGenerator.tscn::PackedScene::1690698886::0::1::::<><>::res://PuzzleGenerator.gd
+settings.tscn::PackedScene::1690698886::0::1::::<><>::res://Magic Sudoku.gd<>res://backtomainmenu.gd
+Sudoku.gd::GDScript::1690698886::0::1::::<>GridContainer<>::res://PuzzleCreator.gd
+::res://Scripts/::1690698886
+Global.gd::GDScript::1690698886::0::1::::<>Node<>::
