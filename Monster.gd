@@ -1,3 +1,4 @@
+#Monster
 extends KinematicBody2D
 
 export var speed = 100
@@ -34,7 +35,3 @@ func _on_Area2D_body_exited(body):
 
 func _ready():
 	player = get_node("/root/MainGame/Player")
-	if player != null:
-		print("Player found!")
-	else:
-		print("Player not found!")

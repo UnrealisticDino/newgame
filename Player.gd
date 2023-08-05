@@ -1,3 +1,4 @@
+#Player
 extends KinematicBody2D
 
 export var shuriken_scene = preload("res://Shuriken.tscn")
@@ -6,6 +7,21 @@ export var max_health = 100
 var health = max_health
 
 var velocity = Vector2()
+var shuriken
+var tracking_power_up
+
+func _ready():
+	tracking_power_up = get_node("/root/MainGame/TrackingPowerUp")
+	# Connect the signal to detect when the player picks up the power-up
+	tracking_power_up.connect("area_entered", self, "_on_TrackingPowerUp_area_entered")
+
+func _on_TrackingPowerUp_area_entered(area):
+	print("Entered area") # Debugging
+	if area == $Area2D:
+		print("Applying power-up") # Debugging
+		tracking_power_up.apply(shuriken)
+		print("Power-up applied") # Debugging
+		tracking_power_up.queue_free()
 
 func _process(delta):
 	velocity = Vector2()
@@ -25,7 +41,7 @@ func _process(delta):
 
 func shoot_shuriken(target_position):
 	var direction = target_position - global_position
-	var shuriken = shuriken_scene.instance()
+	shuriken = shuriken_scene.instance() # Assign the instance to the shuriken variable
 	shuriken.global_position = global_position
 	shuriken.velocity = direction.normalized() * shuriken.speed
 	get_parent().add_child(shuriken)
