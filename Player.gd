@@ -9,18 +9,21 @@ var health = max_health
 var velocity = Vector2()
 var shuriken
 var tracking_power_up
+var shuriken_instance
+var has_tracking_power_up = false  # Add this line
 
 func _ready():
 	tracking_power_up = get_node("/root/MainGame/TrackingPowerUp")
 	# Connect the signal to detect when the player picks up the power-up
 	tracking_power_up.connect("area_entered", self, "_on_TrackingPowerUp_area_entered")
+	if is_in_group("Player"):
+		print("Player is in the 'Player' group!")
+	else:
+		print("Player is not in the 'Player' group!")
 
 func _on_TrackingPowerUp_area_entered(area):
-	print("Entered area") # Debugging
 	if area == $Area2D:
-		print("Applying power-up") # Debugging
-		tracking_power_up.apply(shuriken)
-		print("Power-up applied") # Debugging
+		has_tracking_power_up = true  # Set the variable to true when the power-up is picked up
 		tracking_power_up.queue_free()
 
 func _process(delta):
@@ -41,10 +44,15 @@ func _process(delta):
 
 func shoot_shuriken(target_position):
 	var direction = target_position - global_position
-	shuriken = shuriken_scene.instance() # Assign the instance to the shuriken variable
-	shuriken.global_position = global_position
-	shuriken.velocity = direction.normalized() * shuriken.speed
-	get_parent().add_child(shuriken)
+	shuriken_instance = shuriken_scene.instance()
+	shuriken_instance.global_position = global_position
+	shuriken_instance.velocity = direction.normalized() * shuriken_instance.speed
+	if has_tracking_power_up:  # Check the variable before applying the tracking effect
+		print("Tracking power-up is active!")  # Output a message
+		shuriken_instance.is_tracking = true  # Enable tracking on the shuriken instance
+		if shuriken_instance.is_tracking:
+			print("Shuriken instance is tracking!")  # Output a message
+	get_parent().add_child(shuriken_instance)
 
 func take_damage(damage):
 	health -= damage
