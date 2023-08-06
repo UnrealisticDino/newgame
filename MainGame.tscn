@@ -7,16 +7,16 @@
 [node name="MainGame" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
-position = Vector2( 486, 259 )
+position = Vector2( 719, 273 )
 
 [node name="Monster" parent="." instance=ExtResource( 1 )]
-position = Vector2( 893, 424 )
+position = Vector2( 994, 474 )
 
 [node name="Monster2" parent="." instance=ExtResource( 1 )]
-position = Vector2( 932, 260 )
+position = Vector2( 993, 247 )
 
 [node name="Monster3" parent="." instance=ExtResource( 1 )]
-position = Vector2( 644, 495 )
+position = Vector2( 33, 225 )
 
 [node name="TrackingPowerUp" parent="." instance=ExtResource( 3 )]
-position = Vector2( 473, 133 )
+position = Vector2( 657, 268 )
