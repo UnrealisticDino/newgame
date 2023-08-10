@@ -20,6 +20,7 @@ func _ready():
 func _on_TrackingPowerUp_area_entered(area):
 	if area == $Area2D:
 		has_tracking_power_up = true  # Set the variable to true when the power-up is picked up
+		
 		tracking_power_up.queue_free()
 
 func _process(delta):
@@ -43,9 +44,9 @@ func shoot_shuriken(target_position):
 	shuriken_instance = shuriken_scene.instance()
 	shuriken_instance.global_position = global_position
 	shuriken_instance.velocity = direction.normalized() * shuriken_instance.speed
-	if has_tracking_power_up:  # Check the variable before applying the tracking effect
-		shuriken_instance.is_tracking = true  # Enable tracking on the shuriken instance
-	get_parent().add_child(shuriken_instance)
+	if has_tracking_power_up:
+		shuriken_instance.is_tracking = true
+	get_parent().add_child(shuriken_instance)  # Ensure the Shuriken is added to the scene tree here
 
 func take_damage(damage):
 	health -= damage

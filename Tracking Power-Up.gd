@@ -1,8 +1,6 @@
 # Tracking Power-Up
 extends Area2D
 
-
-print("hello test")
 func _on_TrackingPowerUp_area_entered(area):
 	print("test game")
 	if area.is_in_group("Player"):  # Check if the entered area belongs to the player

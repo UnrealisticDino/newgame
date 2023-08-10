@@ -11,18 +11,26 @@ var velocity = Vector2()
 var is_tracking = false
 
 func _physics_process(delta):
-	# If tracking is enabled, find the nearest monster and set the velocity
+	# If tracking is enabled, try to find a target using raycasting
 	if is_tracking:
-		var nearest_monster = find_nearest_monster()
-		if nearest_monster:
-			var direction = (nearest_monster.global_position - global_position).normalized()
-			velocity = direction * speed  # Set the velocity to the tracking direction
-	# Move the shuriken
+		# Use the raycast to find a monster in the direction the player is aiming
+		target_monster = find_target_monster(aim_direction)
+		if not raycast_in_direction(aim_direction):
+			# If no monster is found using raycasting, find the nearest monster
+			target_monster = find_nearest_monster()
+
+	# If a target monster is found (either through raycasting or nearest search)
+	if target_monster and is_instance_valid(target_monster):
+		var direction = (target_monster.global_position - global_position).normalized()
+		velocity = direction * speed
+	else:
+		# If no target monster is found, stop tracking
+		stop_tracking()
+
+	velocity = velocity.normalized() * speed  # Update the velocity with the new speed
 	move_and_slide(velocity)
-	# Reduce the speed of the shuriken
 	speed -= deceleration * delta
-	speed = max(speed, 0) # Ensure speed doesn't go negative
-	# If the shuriken has stopped, despawn it
+	speed = max(speed, 0)
 	if speed == 0:
 		queue_free()
 
@@ -53,3 +61,57 @@ func _on_Area2D_body_entered(body):
 	if body.has_method("take_damage"):
 		body.take_damage(10)
 		queue_free()
+
+func find_target_monster(mouse_position):
+	aim_direction = (mouse_position - global_position).normalized()
+	
+	# 1. Shoot a line in the direction of the mouse click
+	if raycast_in_direction(aim_direction):
+		return
+
+	# 2. Spread out into a cone
+	var angle_increment = PI / 4 / 10  # 45 degrees divided by 10 rays on each side
+	for i in range(1, 11):  # 10 rays on each side
+		# Check in the clockwise direction
+		var new_direction = aim_direction.rotated(angle_increment * i)
+		if raycast_in_direction(new_direction):
+			return
+
+		# Check in the counter-clockwise direction
+		new_direction = aim_direction.rotated(-angle_increment * i)
+		if raycast_in_direction(new_direction):
+			return
+
+	# 3. If no monster is found in the desired direction, find the closest monster
+	target_monster = find_nearest_monster()
+
+func raycast_in_direction(direction):
+	var ray_start = global_position
+	var ray_end = ray_start + direction * 500
+	var space_state = get_world_2d().direct_space_state
+	var result = space_state.intersect_ray(ray_start, ray_end, [], 4)  # Consider only layer 3
+	if result and "Monsters" in result.collider.get_groups():
+		target_monster = result.collider
+		update()
+		return true
+	update()
+	return false
+
+
+# This function will draw the ray from the shuriken to the target direction.
+func draw_raycast(direction):
+	var ray_start = global_position
+	var ray_end = ray_start + direction * 500  # Arbitrary distance for visualization
+	draw_line(ray_start - global_position, ray_end - global_position, Color(1, 0, 0, 0.5), 2)
+
+# Override the _draw function to draw the rays
+# Override the _draw function to draw the rays
+func _draw():
+	if is_tracking:
+		draw_raycast(aim_direction)
+		var angle_increment = PI / 4 / 10
+		for i in range(1, 11):
+			var new_direction_clockwise = aim_direction.rotated(angle_increment * i)
+			var new_direction_counter_clockwise = aim_direction.rotated(-angle_increment * i)
+			draw_raycast(new_direction_clockwise)
+			draw_raycast(new_direction_counter_clockwise)
