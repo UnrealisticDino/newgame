@@ -9,13 +9,14 @@ var target_monster = null
 var aim_direction = Vector2.ZERO
 var velocity = Vector2()
 var is_tracking = false
+var initial_direction = Vector2.ZERO
 
 func _physics_process(delta):
 	# If tracking is enabled, try to find a target using raycasting
 	if is_tracking:
 		# Use the raycast to find a monster in the direction the player is aiming
 		target_monster = find_target_monster(aim_direction)
-		if not raycast_in_direction(aim_direction):
+		if not raycast_in_direction():
 			# If no monster is found using raycasting, find the nearest monster
 			target_monster = find_nearest_monster()
 
@@ -48,6 +49,10 @@ func find_nearest_monster():
 				target_monster = monster
 	return target_monster
 
+func fire(direction):
+	initial_direction = direction.normalized()
+	velocity = initial_direction * speed
+
 func stop_tracking():
 	is_tracking = false
 	target_monster = null
@@ -66,7 +71,7 @@ func find_target_monster(mouse_position):
 	aim_direction = (mouse_position - global_position).normalized()
 	
 	# 1. Shoot a line in the direction of the mouse click
-	if raycast_in_direction(aim_direction):
+	if raycast_in_direction():
 		return
 
 	# 2. Spread out into a cone
@@ -74,20 +79,20 @@ func find_target_monster(mouse_position):
 	for i in range(1, 11):  # 10 rays on each side
 		# Check in the clockwise direction
 		var new_direction = aim_direction.rotated(angle_increment * i)
-		if raycast_in_direction(new_direction):
+		if raycast_in_direction():
 			return
 
 		# Check in the counter-clockwise direction
 		new_direction = aim_direction.rotated(-angle_increment * i)
-		if raycast_in_direction(new_direction):
+		if raycast_in_direction():
 			return
 
 	# 3. If no monster is found in the desired direction, find the closest monster
 	target_monster = find_nearest_monster()
 
-func raycast_in_direction(direction):
+func raycast_in_direction():
 	var ray_start = global_position
-	var ray_end = ray_start + direction * 500
+	var ray_end = ray_start + initial_direction * 500
 	var space_state = get_world_2d().direct_space_state
 	var result = space_state.intersect_ray(ray_start, ray_end, [], 4)  # Consider only layer 3
 	if result and "Monsters" in result.collider.get_groups():
@@ -97,21 +102,18 @@ func raycast_in_direction(direction):
 	update()
 	return false
 
-
 # This function will draw the ray from the shuriken to the target direction.
 func draw_raycast(direction):
 	var ray_start = global_position
 	var ray_end = ray_start + direction * 500  # Arbitrary distance for visualization
 	draw_line(ray_start - global_position, ray_end - global_position, Color(1, 0, 0, 0.5), 2)
 
-# Override the _draw function to draw the rays
-# Override the _draw function to draw the rays
 func _draw():
 	if is_tracking:
-		draw_raycast(aim_direction)
+		draw_raycast(initial_direction)
 		var angle_increment = PI / 4 / 10
 		for i in range(1, 11):
-			var new_direction_clockwise = aim_direction.rotated(angle_increment * i)
-			var new_direction_counter_clockwise = aim_direction.rotated(-angle_increment * i)
+			var new_direction_clockwise = initial_direction.rotated(angle_increment * i)
+			var new_direction_counter_clockwise = initial_direction.rotated(-angle_increment * i)
 			draw_raycast(new_direction_clockwise)
 			draw_raycast(new_direction_counter_clockwise)

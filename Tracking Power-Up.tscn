@@ -1,6 +1,5 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://Tracking Power-Up.gd" type="Script" id=1]
 [ext_resource path="res://Shuriken.png" type="Texture" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
@@ -8,7 +7,6 @@
 [node name="TrackingPowerUp" type="Area2D"]
 position = Vector2( 402, 216 )
 collision_layer = 256
-script = ExtResource( 1 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )

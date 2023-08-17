@@ -44,6 +44,7 @@ func shoot_shuriken(target_position):
 	shuriken_instance = shuriken_scene.instance()
 	shuriken_instance.global_position = global_position
 	shuriken_instance.velocity = direction.normalized() * shuriken_instance.speed
+	shuriken_instance.initial_direction = direction.normalized()  # <-- Add this line here
 	if has_tracking_power_up:
 		shuriken_instance.is_tracking = true
 	get_parent().add_child(shuriken_instance)  # Ensure the Shuriken is added to the scene tree here
