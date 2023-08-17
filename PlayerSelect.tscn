@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://SelectNinja.gd" type="Script" id=1]
+
+[node name="PlayerSelect" type="Node2D"]
+
+[node name="Button" type="Button" parent="."]
+margin_left = 234.0
+margin_top = 126.0
+margin_right = 279.0
+margin_bottom = 146.0
+text = "Ninja"
+script = ExtResource( 1 )

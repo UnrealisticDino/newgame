@@ -3,7 +3,7 @@ extends KinematicBody2D
 
 export var speed = 500
 export var deceleration = 350
-export var tracking_speed = 100
+export var tracking_speed = 4
 
 var target_monster = null
 var aim_direction = Vector2.ZERO
@@ -22,8 +22,9 @@ func _physics_process(delta):
 
 	# If a target monster is found (either through raycasting or nearest search)
 	if target_monster and is_instance_valid(target_monster):
-		var direction = (target_monster.global_position - global_position).normalized()
-		velocity = direction * speed
+		var desired_direction = (target_monster.global_position - global_position).normalized()
+		# Interpolate the velocity direction towards the desired direction
+		velocity = velocity.linear_interpolate(desired_direction * speed, tracking_speed * delta)
 	else:
 		# If no target monster is found, stop tracking
 		stop_tracking()
